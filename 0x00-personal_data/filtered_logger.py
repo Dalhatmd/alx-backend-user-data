@@ -4,14 +4,14 @@ import re
 from typing import (List,)
 import logging
 import mysql.connector
-import os
+from os import environ
 
 
 db_config = {
-             'username': os.getenv('PERSONAL_DATA_DB_USERNAME'),
-             'password': os.getenv('PERSONAL_DATA_DB_PASSWORD'),
-             'host': os.getenv('PERSONAL_DATA_DB_HOST'),
-             'database': os.getenv('PERSONAL_DATA_DB_NAME')
+             'username': environ.get('PERSONAL_DATA_DB_USERNAME', 'root'),
+             'password': environ.get('PERSONAL_DATA_DB_PASSWORD', ''),
+             'host': environ.get('PERSONAL_DATA_DB_HOST', 'localhost'),
+             'database': environ.get('PERSONAL_DATA_DB_NAME')
           }
 
 
