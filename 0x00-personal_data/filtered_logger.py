@@ -54,12 +54,30 @@ class RedactingFormatter(logging.Formatter):
 
 
 def get_logger() -> logging.Logger:
-    logger = logging.getLogger("PII_Logger")
-    logger.setLevel(logger.INFO)
-    file_handler = logging.FileHandler("user_data")
+    """ gets and returns a logger object"""
+    logger = logging.getLogger("user_data")
+    logger.setLevel(logging.INFO)
+    stream_handler = logging.StreamHandler()
     formatter = RedactingFormatter(fields=PII_FIELDS)
     stream_handler.setFormatter(formatter)
 
-    logger.addHandler(file_handler)
+    logger.addHandler(stream_handler)
     logger.propagate = False
     return logger
+
+
+def main():
+    """ main func """
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM users;')
+    
+    logger = get_logger()
+    for (name, email, phone, ssn, password, ip, last_login, user_agent) in cursor.fetchall():
+        message = f'name={name}; email={email}; phone={phone}; ssn={ssn};password={password}; ip={ip}; last_login={last_login};user_agent={user_agent}'
+        logger.info(message)
+
+
+
+if __name__ == "__main__":
+    main()
