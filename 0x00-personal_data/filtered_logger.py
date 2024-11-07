@@ -8,18 +8,21 @@ import os
 
 
 db_config = {
-             'user': os.getenv('PERSONAL_DATA_DB_USERNAME'),
+             'username': os.getenv('PERSONAL_DATA_DB_USERNAME'),
              'password': os.getenv('PERSONAL_DATA_DB_PASSWORD'),
              'host': os.getenv('PERSONAL_DATA_DB_HOST'),
              'database': os.getenv('PERSONAL_DATA_DB_NAME')
           }
 
-def get_db():
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
     """ returns a mysql connector object """
     connection = mysql.connector.connect(**db_config)
     return connection
 
+
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
+
 
 def filter_datum(fields: List[str],
                  redaction: str,
@@ -30,6 +33,7 @@ def filter_datum(fields: List[str],
         message = re.sub(f'{f}=.*?{separator}',
                          f'{f}={redaction}{separator}', message)
     return message
+
 
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class
@@ -47,6 +51,7 @@ class RedactingFormatter(logging.Formatter):
         record.msg = filter_datum(self.fields, self.REDACTION,
                                   record.getMessage(), self.SEPARATOR)
         return super(RedactingFormatter, self).format(record)
+
 
 def get_logger() -> logging.Logger:
     logger = logging.getLogger("PII_Logger")
