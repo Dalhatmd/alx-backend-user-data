@@ -3,7 +3,21 @@
 import re
 from typing import (List,)
 import logging
+import mysql.connector
+import os
 
+
+db_config = {
+             'user': os.getenv('PERSONAL_DATA_DB_USERNAME'),
+             'password': os.getenv('PERSONAL_DATA_DB_PASSWORD'),
+             'host': os.getenv('PERSONAL_DATA_DB_HOST'),
+             'database': os.getenv('PERSONAL_DATA_DB_NAME')
+          }
+
+def get_db():
+    """ returns a mysql connector object """
+    connection = mysql.connector.connect(**db_config)
+    return connection
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
