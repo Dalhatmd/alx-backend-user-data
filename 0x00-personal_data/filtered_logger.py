@@ -36,14 +36,14 @@ def filter_datum(fields: List[str],
 
 
 class RedactingFormatter(logging.Formatter):
-    """ Redacting Formatter class
-        """
+    """ Redacting Formatter class"""
 
     REDACTION = "***"
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
 
     def __init__(self, fields: List[str]):
+        """ initailizer func"""
         super(RedactingFormatter, self).__init__(self.FORMAT)
         self.fields = fields
 
@@ -67,16 +67,25 @@ def get_logger() -> logging.Logger:
 
 
 def main():
-    """ main func """
+    """ main function """
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM users;')
-    
-    logger = get_logger()
-    for (name, email, phone, ssn, password, ip, last_login, user_agent) in cursor.fetchall():
-        message = f'name={name}; email={email}; phone={phone}; ssn={ssn};password={password}; ip={ip}; last_login={last_login};user_agent={user_agent}'
-        logger.info(message)
 
+    logger = get_logger()
+    for (name,
+         email,
+         phone,
+         ssn,
+         password,
+         ip,
+         last_login,
+         user_agent) in cursor.fetchall():
+        message = f'name={name}; email={email}; phone={phone};\
+        ssn={ssn};password={password};\
+        ip={ip}; last_login={last_login};\
+        user_agent={user_agent}'
+        logger.info(message)
 
 
 if __name__ == "__main__":
