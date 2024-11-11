@@ -16,8 +16,8 @@ auth = None
 
 auth = os.getenv('AUTH_TYPE')
 if auth:
-    from api.v1.auth.auth import Auth
-    auth = Auth()
+    from api.v1.auth.basic_auth import BasicAuth
+    auth = BasicAuth()
 
 excluded_list = ['/api/v1/status/', '/api/v1/unauthorized/', '/api/v1/forbidden/']
 
@@ -52,7 +52,8 @@ def filter():
     if auth.current_user(request) is None:
         abort(403)
 
-
+def extract_base64_authorization_header(self, authorization_header: str) -> str:
+    pass
 
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
