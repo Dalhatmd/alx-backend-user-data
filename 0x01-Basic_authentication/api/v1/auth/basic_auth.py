@@ -3,6 +3,7 @@
 from .auth import Auth
 import base64
 from typing import TypeVar
+from models.user import User
 
 
 class BasicAuth(Auth):
@@ -54,12 +55,19 @@ class BasicAuth(Auth):
                                      user_pwd: str) -> TypeVar('User'):
         """ returns user credentials from email and password
         """
-        if type(user_email) != str or type(user_pwd) != str:
+        if not isinstance(user_email, str) or not isinstance(user_pwd, str):
             return None
 
-        User.load_from_file()
-        loaded_users = DATA["User"]
+        try:
+            filtered_users = User.search({"email": user_email})
+            if not filtered_users:
+                return None
 
-        for user in loaded_users.items():
-            print(user.email)
-            print(user._password)
+            for user in filtered_users:
+                if user.is_valid_password(user_pwd):
+                    return user
+
+        except Exception:
+            return None
+
+        return None
