@@ -22,7 +22,7 @@ if auth == 'auth':
 elif auth == 'basic_auth':
     auth = BasicAuth()
 
-excluded_list = ['/api/v1/stat*/',
+excluded_list = ['/api/v1/status/',
                  '/api/v1/unauthorized/',
                  '/api/v1/forbidden/']
 
