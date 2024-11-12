@@ -29,3 +29,29 @@ class BasicAuth(Auth):
             return decoded
         except Exception as e:
             return None
+
+    def extract_user_credentials(self, decoded_base64_authorization_header: str) -> (str, str):
+        """ extracts user credentials from decoded auth header
+        """
+        if type(decoded_base64_authorization_header) != str:
+            return None, None
+
+        if ':' not in decoded_base64_authorization_header:
+            return None, None
+
+        username, password = decoded_base64_authorization_header.split(':')
+        return (username, password)
+
+
+    def user_object_from_credentials(self, user_email: str, user_pwd: str) -> TypeVar('User'):
+        """ returns user credentials from email and password
+        """
+        if type(user_email) != str or type(user_pwd) != str:
+            return None
+
+        User.load_from_file()
+        loaded_users = DATA["User"]
+
+        for user in loaded_users.items():
+            print(user.email)
+            print(user._password)
