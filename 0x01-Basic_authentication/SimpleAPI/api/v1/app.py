@@ -43,7 +43,7 @@ def forbidden(error) -> str:
 def filter():
     """Filters requests
     """
-    if not auth.require_auth(request.path, excluded_list):
+    if not auth or not auth.require_auth(request.path, excluded_list):
         return
 
     if auth.authorization_header(request) is None:
