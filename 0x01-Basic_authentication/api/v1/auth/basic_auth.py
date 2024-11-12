@@ -2,6 +2,7 @@
 """ BasicAuth module"""
 from .auth import Auth
 import base64
+from typing import TypeVar
 
 
 class BasicAuth(Auth):
