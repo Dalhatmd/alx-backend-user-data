@@ -27,7 +27,8 @@ elif auth == "session_auth":
 
 excluded_list = ['/api/v1/status/',
                  '/api/v1/unauthorized/',
-                 '/api/v1/forbidden/']
+                 '/api/v1/forbidden/',
+                 '/api/v1/auth_session/login/']
 
 
 @app.errorhandler(404)
@@ -59,7 +60,10 @@ def filter():
         return
 
     request.current_user = auth.current_user(request)
-
+    if not auth.authorization_header(request) and not \
+       auth.session_cookie(request):
+        abort(401)
+        return None
     if auth.authorization_header(request) is None:
         abort(401)
 
