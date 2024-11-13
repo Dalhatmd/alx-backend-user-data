@@ -2,6 +2,7 @@
 """ sessuin auth module """
 from .auth import Auth
 import uuid
+from os import getenv
 
 
 class SessionAuth(Auth):
@@ -25,3 +26,4 @@ class SessionAuth(Auth):
         if not isinstance(session_id, str) or session_id is None:
             return None
         user_id = self.user_id_by_session_id.get(session_id, None)
+        return user_id
