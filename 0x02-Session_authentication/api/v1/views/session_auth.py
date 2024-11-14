@@ -11,12 +11,12 @@ def authenticate():
     """ views for session login"""
     email = request.form.get('email')
     password = request.form.get('password')
-    
+
     if not email:
         return jsonify({"error": "email missing"}), 400
     if not password:
         return jsonify({"error": "password missing"}), 400
-    
+
     users = User.search({"email": email})
     if not users:
         return jsonify({"error": "no user found for this email"}), 404
@@ -31,3 +31,12 @@ def authenticate():
     return jsonify({"error": "wrong password"}), 401
 
 
+@app_views.route('/api/v1/auth_session/logout',
+                 methods=['DELETE'], strict_slashes=False)
+def logout():
+    """ logout functionality
+    """
+    from api.v1.app import auth
+    if auth.destroy_session(request):
+        return jsonify({}), 200
+    abort(404)
