@@ -13,7 +13,7 @@ from user import Base
 class DB:
     """DB class
     """
-
+    valid_args = {'email': str,"hashed_password": str, "id": int}
     def __init__(self) -> None:
         """Initialize a new DB instance
         """
@@ -40,13 +40,23 @@ class DB:
     def find_user_by(self, **kwargs: str) -> User:
         """searches for a user in db
         """
-        valid_args = ('email',)
-        for key in kwargs.keys():
-            if key == "email":
-                user = self._session.query(User).filter_by(email=kwargs[key]).first()
+        for key, value in kwargs.items():
+            if key in self.valid_args:
+                user = self._session.query(User).filter_by(**{key: value}).first()
                 if not user:
                     raise NoResultFound
                 else:
                     return user
-            if key not in valid_args:
+            else:
                 raise InvalidRequestError
+
+    def update_user(self, user_id, **kwargs: str) -> User:
+        """Finds and updates a user using given input"""
+        found_user = self.find_user_by(id=user_id)
+        if found_user:
+            for key, value in kwargs.items():
+                if type(kwargs.get(key)) == self.valid_args.get(key):
+                    setattr(found_user, key, value)
+                    self._session.commit()
+                    return found_user
+                raise ValueError
