@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """ auth module"""
 import bcrypt
+import uuid
 from db import DB
 from user import User
 from sqlalchemy.orm.exc import NoResultFound
@@ -42,3 +43,18 @@ class Auth:
 
         except NoResultFound:
             return False
+
+    def __generate_uuid(self):
+        """ generates a uid """
+        return str(uuid.uuid4())
+
+    def create_session(self, email):
+        """creates a session for input email
+        """
+        try:
+            user = self._db.find_user_by(email=email)
+            session_id = self.__generate_uuid()
+            user.session_id = session_id
+            return session_id
+        except NoResultFound:
+            return None
