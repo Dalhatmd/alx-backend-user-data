@@ -63,7 +63,7 @@ class Auth:
         """ finds user corresponding to session_id
         """
         try:
-            user = self._db.find_user_by(session_id)
+            user = self._db.find_user_by(session_id=session_id)
             return user
         except NoResultFound:
             return None
@@ -72,7 +72,7 @@ class Auth:
         """ destroys a user's session
         """
         try:
-            user = self._db.find_user_by(user_id)
+            user = self._db.find_user_by(id=user_id)
             user.session_id = None
             return None
         except NoResultFound:
