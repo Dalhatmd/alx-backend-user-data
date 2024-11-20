@@ -13,7 +13,7 @@ from user import Base
 class DB:
     """DB class
     """
-    valid_args = {'email': str,"hashed_password": str, "id": int, 'session_id', int}
+    valid_args = {'email': str,"hashed_password": str, "id": int, 'session_id': int}
     def __init__(self) -> None:
         """Initialize a new DB instance
         """
