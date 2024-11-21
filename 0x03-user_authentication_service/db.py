@@ -13,7 +13,7 @@ from user import Base
 class DB:
     """DB class
     """
-    valid_args = {'email': str,"hashed_password": str, "id": int, 'session_id': int}
+    valid_args = {'email': str,"hashed_password": str, "id": int, 'session_id': str, 'reset_token': str}
     def __init__(self) -> None:
         """Initialize a new DB instance
         """
@@ -51,12 +51,22 @@ class DB:
                 raise InvalidRequestError
 
     def update_user(self, user_id, **kwargs: str) -> User:
-        """Finds and updates a user using given input"""
+        """Finds and updates a user with the given data"""
         found_user = self.find_user_by(id=user_id)
-        if found_user:
-            for key, value in kwargs.items():
-                if type(kwargs.get(key)) == self.valid_args.get(key):
-                    setattr(found_user, key, value)
-                    self._session.commit()
-                    return found_user
-                raise ValueError
+        if not found_user:
+            raise ValueError("User not found")
+
+        for key, value in kwargs.items():
+            # Validate field type
+            expected_type = self.valid_args.get(key)
+            if not expected_type:
+                raise ValueError(f"Invalid field: {key}")
+            if not isinstance(value, expected_type):
+                raise ValueError(f"Incorrect type for field: {key}")
+
+            # Set attribute
+            setattr(found_user, key, value)
+
+        self._session.commit()
+        return found_user
+

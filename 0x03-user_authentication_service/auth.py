@@ -72,3 +72,11 @@ class Auth:
         """ destroys a user's session
         """
         self._db.update_user(user_id, session_id=None)
+
+    def get_reset_password_token(self, email):
+        """gets token to reset password """
+        user = self._db.find_user_by(email=email)
+        reset_token = self.__generate_uuid()
+        self._db.update_user(user.id, reset_token=reset_token)
+        return reset_token
+
