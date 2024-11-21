@@ -47,9 +47,9 @@ def login():
         abort(401)
     if AUTH.valid_login(email, password):
         session_id = AUTH.create_session(email)
-        response = make_response()
-        response.set_cookie('session_id', session_id)
-        return jsonify({"email": f"{email}", "message": "logged in"})
+        response = make_response(jsonify({"email": f"{email}", "message": "logged in"}))
+        response.set_cookie('session_id', session_id, secure=True, httponly=True)
+        return response
     else:
         abort(401)
 
@@ -59,11 +59,23 @@ def logout():
     """ logout functionality
     """
     session_id = request.cookies.get('session_id')
-    user = auth.get_user_from_session_id(session_id)
+    user = AUTH.get_user_from_session_id(session_id)
     if not user:
         abort(403)
-    auth.destroy_session(user.id)
+    AUTH.destroy_session(user.id)
     return redirect('/')
+
+
+@app.route('/profile', methods=['GET'], strict_slashes=False)
+def profile():
+    """ returns a profile from session_id
+    """
+    session_id = request.cookies.get('session_id')
+    if not session_id:
+        abort(403)
+    user = AUTH.get_user_from_session_id(session_id)
+    return jsonify({"email": user.email}), 200
+    abort(403)
 
 
 if __name__ == "__main__":
