@@ -80,3 +80,13 @@ class Auth:
         self._db.update_user(user.id, reset_token=reset_token)
         return reset_token
 
+    def update_password(self, reset_token, password):
+        """ updates a user's password using reset_token
+        """
+        try:
+            user = self._db.find_user_by(reset_token=reset_token)
+            updated_password = _hash_password(password)
+            self._db.update_user(user.id, hashed_password=updated_password)
+            return updated_password
+        except NoResultFound:
+            raise ValueError('User not found')

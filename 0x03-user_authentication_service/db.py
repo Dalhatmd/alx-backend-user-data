@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """DB module
 """
 from sqlalchemy import create_engine
@@ -13,7 +14,10 @@ from user import Base
 class DB:
     """DB class
     """
-    valid_args = {'email': str,"hashed_password": str, "id": int, 'session_id': str, 'reset_token': str}
+    valid_args = {'email': str, "hashed_password": str,
+                  "id": int, 'session_id': str,
+                  'reset_token': str}
+
     def __init__(self) -> None:
         """Initialize a new DB instance
         """
@@ -42,7 +46,8 @@ class DB:
         """
         for key, value in kwargs.items():
             if key in self.valid_args:
-                user = self._session.query(User).filter_by(**{key: value}).first()
+                user = self._session.query(User).filter_by(
+                       **{key: value}).first()
                 if not user:
                     raise NoResultFound
                 else:
@@ -69,4 +74,3 @@ class DB:
 
         self._session.commit()
         return found_user
-
