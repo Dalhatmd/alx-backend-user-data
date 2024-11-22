@@ -15,6 +15,12 @@ def _hash_password(password: str) -> bytes:
     return hashed_password
 
 
+def _generate_uuid(self) -> str:
+    """ generates a uid """
+    id = uuid.uuid4()
+    return str(id)
+
+
 class Auth:
     """Auth class to interact with the authentication database.
     """
@@ -43,11 +49,6 @@ class Auth:
 
         except NoResultFound:
             return False
-
-    def _generate_uuid(self) -> str:
-        """ generates a uid """
-        id = uuid.uuid4()
-        return str(id)
 
     def create_session(self, email):
         """creates a session for input email
