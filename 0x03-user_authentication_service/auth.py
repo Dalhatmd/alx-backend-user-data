@@ -55,10 +55,11 @@ class Auth:
         """
         try:
             user = self._db.find_user_by(email=email)
-            user.session_id = _generate_uuid()
-            return user.session_id
         except NoResultFound:
             return None
+        else:
+            user.session_id = _generate_uuid()
+            return user.session_id
 
     def get_user_from_session_id(self, session_id):
         """ finds user corresponding to session_id
