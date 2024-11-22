@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ auth module"""
 import bcrypt
-import uuid
+from uuid import uuid4
 from db import DB
 from user import User
 from sqlalchemy.orm.exc import NoResultFound
@@ -15,9 +15,9 @@ def _hash_password(password: str) -> bytes:
     return hashed_password
 
 
-def _generate_uuid(self) -> str:
+def _generate_uuid() -> str:
     """ generates a uid """
-    id = uuid.uuid4()
+    id = uuid4()
     return str(id)
 
 
@@ -55,7 +55,7 @@ class Auth:
         """
         try:
             user = self._db.find_user_by(email=email)
-            session_id = self._generate_uuid()
+            session_id = _generate_uuid()
             user.session_id = session_id
             return session_id
         except NoResultFound:
@@ -78,7 +78,7 @@ class Auth:
     def get_reset_password_token(self, email):
         """gets token to reset password """
         user = self._db.find_user_by(email=email)
-        reset_token = self._generate_uuid()
+        reset_token = _generate_uuid()
         self._db.update_user(user.id, reset_token=reset_token)
         return reset_token
 
