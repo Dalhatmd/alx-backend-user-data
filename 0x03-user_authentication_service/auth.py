@@ -32,7 +32,7 @@ class Auth:
             hashed_pw = _hash_password(password)
             new_user = self._db.add_user(email, hashed_pw)
 
-    def valid_login(self, email, password):
+    def valid_login(self, email: str, password: str) -> bool:
         """ validates login
         """
         try:
