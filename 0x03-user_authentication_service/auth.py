@@ -73,7 +73,13 @@ class Auth:
     def destroy_session(self, user_id):
         """ destroys a user's session
         """
-        self._db.update_user(user_id, session_id=None)
+        try:
+            user = self._db.find_user_by(id=user_id)
+        except NoResultFound:
+            return None
+        else:
+            user.session_id = None
+            return user.session_id
 
     def get_reset_password_token(self, email):
         """gets token to reset password """
