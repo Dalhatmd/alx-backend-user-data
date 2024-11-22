@@ -55,21 +55,19 @@ class DB:
             else:
                 raise InvalidRequestError
 
-    def update_user(self, user_id, **kwargs: str) -> User:
+    def update_user(self, user_id: int, **kwargs) -> None:
         """Finds and updates a user with the given data"""
         found_user = self.find_user_by(id=user_id)
         if not found_user:
             raise ValueError("User not found")
 
         for key, value in kwargs.items():
-            # Validate field type
             expected_type = self.valid_args.get(key)
             if not expected_type:
                 raise ValueError(f"Invalid field: {key}")
             if not isinstance(value, expected_type):
                 raise ValueError(f"Incorrect type for field: {key}")
 
-            # Set attribute
             setattr(found_user, key, value)
 
         self._session.commit()
